@@ -28,6 +28,6 @@ import { User, Product, Order, OrderItem } from '../ecomerce';
   providers: [AppService],
 })
 export class AppModule implements NestModule {
-  // constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) {}
   configure(consumer: MiddlewareConsumer) {}
 }
