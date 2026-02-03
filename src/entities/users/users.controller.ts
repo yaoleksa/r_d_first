@@ -9,7 +9,7 @@ export class UsersController {
 
     @Get()
     @HttpCode(200)
-    getUsers(): User[] {
+    getUsers(): Promise<User[]> {
         return this.usersService.findAll();
     }
 
