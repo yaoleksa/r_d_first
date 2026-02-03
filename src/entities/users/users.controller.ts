@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Delete, Body, HttpCode, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, HttpCode, Param, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../../../ecomerce';
+import { ZodValidationPipe, createUserSchema } from '../pipes/Pipe';
 
 @Controller('Users')
 export class UsersController {
@@ -21,13 +22,17 @@ export class UsersController {
 
     @Post()
     @HttpCode(201)
-    createUser(@Body() user: User): string {
-       return this.usersService.create(user);
+    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<string> { // new ZodValidationPipe(createUserSchema)
+        try {
+            return await this.usersService.create(user);
+        } catch (err) {
+            return err.message;
+        }
     }
 
-    @Delete(':name')
+    @Delete(':id')
     @HttpCode(204)
-    deleteUser(@Param('name') name: string): string {
-        return this.usersService.removeByName(name);
+    async deleteUser(@Param('id') id: number): Promise<string> {
+        return this.usersService.deleteUser(id);
     }
 }

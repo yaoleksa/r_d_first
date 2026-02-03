@@ -7,9 +7,10 @@ import { Repository } from "typeorm";
 export class UsersService {
     constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
-    create(user: User): string {
+    async create(user: User): Promise<string> {
         try {
-            this.userRepository.create(user);
+            const newUser = this.userRepository.create(user);
+            this.userRepository.save(newUser);
         } catch(err) {
             return err.message;
         }
@@ -25,5 +26,9 @@ export class UsersService {
     }
     findAll(): Promise<User[]> {
         return this.userRepository.find();
+    }
+    async deleteUser(id: number): Promise<string> {
+        await this.userRepository.delete(id);
+        return 'User has been deleted';
     }
 }
