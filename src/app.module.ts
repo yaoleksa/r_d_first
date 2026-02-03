@@ -21,7 +21,8 @@ import { User, Product, Order, OrderItem } from '../ecomerce';
       username: 'postgres',
       password: 'Default_password#1',
       database: 'postgres',
-      entities: [User, Product, Order, OrderItem]
+      entities: [User, Product, Order, OrderItem],
+      synchronize: true
     })
   ],
   controllers: [AppController, MeController],

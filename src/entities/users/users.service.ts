@@ -8,7 +8,11 @@ export class UsersService {
     constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
     create(user: User): string {
-        this.userRepository.create(user);
+        try {
+            this.userRepository.create(user);
+        } catch(err) {
+            return err.message;
+        }
         return 'User has been created successfuly';
     }
     findByName(name: string): User | string {
