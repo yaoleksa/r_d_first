@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MeController } from './me.controller';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users.module';
+import { UsersModule } from './entities';
 import { User, Product, Order, OrderItem } from '../ecomerce';
 
 @Module({
