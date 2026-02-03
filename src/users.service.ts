@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "./interfaces/user.interface";
+import { User } from "../ecomerce";
 
 @Injectable()
 export class UsersService {
@@ -12,7 +12,7 @@ export class UsersService {
     }
     findByName(name: string): User | string {
         for(let person of this.users) {
-            if(person.name.match(new RegExp(`${name}`, 'ig'))) {
+            if(person.lastName.match(new RegExp(`${name}`, 'ig'))) {
                 return person;
             }
         }
@@ -20,7 +20,7 @@ export class UsersService {
     }
     removeByName(name: string): string {
         for(let i = 0; i < this.users.length; i++) {
-            if(this.users[i].name.match(new RegExp(`${name}`, 'ig'))) {
+            if(this.users[i].lastName.match(new RegExp(`${name}`, 'ig'))) {
                 this.users.splice(i, 1);
                 return 'User was successfully removed';
             } 
