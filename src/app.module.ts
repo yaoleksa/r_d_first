@@ -6,8 +6,7 @@ import { AppService } from './app.service';
 import { MeController } from './me.controller';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users.module';
-import { Product } from '../ecomerce/entity/Product';
-import { User } from '../ecomerce/entity/User';
+import { User, Product, Order, OrderItem } from '../ecomerce';
 
 @Module({
   imports: [
@@ -22,7 +21,7 @@ import { User } from '../ecomerce/entity/User';
       username: 'postgres',
       password: 'Default_password#1',
       database: 'postgres',
-      entities: [User, Product]
+      entities: [User, Product, Order, OrderItem]
     })
   ],
   controllers: [AppController, MeController],
