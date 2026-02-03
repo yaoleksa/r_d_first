@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, HttpCode, Param, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, HttpCode, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../../../ecomerce';
 import { ZodValidationPipe, createUserSchema } from '../pipes/Pipe';
@@ -22,7 +22,7 @@ export class UsersController {
 
     @Post()
     @HttpCode(201)
-    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<string> { // new ZodValidationPipe(createUserSchema)
+    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<string> {
         try {
             return await this.usersService.create(user);
         } catch (err) {

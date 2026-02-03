@@ -4,11 +4,11 @@ import { ZodType, z } from "zod";
 class ZodValidationPipe<T> implements PipeTransform {
     constructor(private readonly schema: ZodType<T>) {}
     transform(value: any, metadata: ArgumentMetadata) {
-        const newUser = this.schema.safeParse(value);
-        if(!newUser.success) {
-            throw new BadRequestException("Invalid User payload");
+        const newInstance = this.schema.safeParse(value);
+        if(!newInstance.success) {
+            throw new BadRequestException(`Invalid ${metadata.metatype.toString().split(' ')[1]} payload`);
         }
-        return newUser.data;
+        return newInstance.data;
     }
 }
 
@@ -19,4 +19,10 @@ const createUserSchema = z.object({
     email: z.string()
 });
 
-export { ZodValidationPipe, createUserSchema };
+const createProductSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    price: z.number()
+});
+
+export { ZodValidationPipe, createUserSchema, createProductSchema };
