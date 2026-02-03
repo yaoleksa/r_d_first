@@ -5,12 +5,12 @@ import { VersioningType } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT ?? 3000;
-  const host = process.env.HOST ?? 'localhost';
+  const host = process.env.HOST ?? '127.0.0.1';
   app.enableVersioning({
     type: VersioningType.URI
   });
   await app.listen(port, () => {
-    console.log(process.env.PORT, host, `App is running on http://${host}:${port}/`);
+    console.log(`App is running on http://${host}:${port}/`);
   });
 }
 bootstrap();
