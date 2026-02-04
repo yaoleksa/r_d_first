@@ -10,7 +10,7 @@ export class UsersController {
 
     @Get()
     @HttpCode(200)
-    getUsers(): Promise<User[]> {
+    getUsers(): Promise<User[] | string> {
         return this.usersService.findAll();
     }
 
@@ -22,7 +22,7 @@ export class UsersController {
 
     @Post()
     @HttpCode(201)
-    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<string> {
+    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<string | User> {
         try {
             return await this.usersService.create(user);
         } catch (err) {

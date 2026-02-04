@@ -13,5 +13,5 @@ export class Order {
     @OneToMany(type => Product, product => product.id)
     products: Product[]
     @OneToOne(type => User)
-    userId: number
+    userId: User
 }

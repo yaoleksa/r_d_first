@@ -1,20 +1,27 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "../../../ecomerce";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { DataSource, QueryRunner } from "typeorm";
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
+    
+    constructor(private dataSource: DataSource) {}
 
-    async create(user: User): Promise<string> {
+    async create(user: User): Promise<User | string> {
+        const queryRunner = await this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
         try {
-            const newUser = this.userRepository.create(user);
-            this.userRepository.save(newUser);
+            const newUser = await queryRunner.manager.save(user);
+            await queryRunner.commitTransaction();
+            return newUser;
         } catch(err) {
+            await queryRunner.rollbackTransaction();
             return err.message;
+        } finally {
+            // Avoid ECONNREFUSED / too many connections ERROR
+            await queryRunner.release();
         }
-        return 'User has been created successfuly';
     }
     findByName(name: string): User | string {
         
@@ -24,11 +31,35 @@ export class UsersService {
         
         return 'There is no user with such name';
     }
-    findAll(): Promise<User[]> {
-        return this.userRepository.find();
+    async findAll(): Promise<User[] | string> {
+        const queryRunner = await this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            const usersList = await queryRunner.manager.find(User);
+            await queryRunner.commitTransaction();
+            return usersList;
+        } catch(err) {
+            await queryRunner.rollbackTransaction();
+            return err.message;
+        } finally {
+            // Avoid ECONNREFUSED / too many connections ERROR
+            await queryRunner.release();
+        }
     }
     async deleteUser(id: number): Promise<string> {
-        await this.userRepository.delete(id);
-        return 'User has been deleted';
+        const queryRunner = await this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            await queryRunner.manager.delete(User, id);
+            await queryRunner.commitTransaction();
+        } catch(err) {
+            await queryRunner.rollbackTransaction();
+            return err.message;
+        } finally {
+            // Avoid ECONNREFUSED / too many connections ERROR
+            await queryRunner.release();
+        }
     }
 }
