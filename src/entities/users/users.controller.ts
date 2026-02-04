@@ -2,6 +2,7 @@ import { Controller, Get, Post, Delete, Body, HttpCode, Param } from '@nestjs/co
 import { UsersService } from './users.service';
 import { User } from '../../../ecomerce';
 import { ZodValidationPipe, createUserSchema } from '../pipes/Pipe';
+import { DeleteResult } from 'typeorm';
 
 @Controller('Users')
 export class UsersController {
@@ -32,7 +33,7 @@ export class UsersController {
 
     @Delete(':id')
     @HttpCode(204)
-    async deleteUser(@Param('id') id: number): Promise<string> {
+    async deleteUser(@Param('id') id: number): Promise<DeleteResult> {
         return this.usersService.deleteUser(id);
     }
 }
