@@ -6,17 +6,18 @@ import { DataSource, DeleteResult, QueryRunner } from "typeorm";
 export class ProductService {
     constructor(private dataSource: DataSource) {}
     // corresponding with POST HTTP method
-    async addNewProduct(prtoduct: Product): Promise<Product | string> {
-        const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
+    async addNewProduct(product: Product): Promise<Product> {
+        const queryRunner: QueryRunner = await this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const newProduct = await queryRunner.manager.save(prtoduct);
+            const newProduct = await queryRunner.manager.create(Product, product);
+            const savedProduct = await queryRunner.manager.save(newProduct);
             await queryRunner.commitTransaction();
-            return newProduct;
+            return savedProduct;
         } catch(err) {
-            queryRunner.rollbackTransaction();
-            return err.message;
+            await queryRunner.rollbackTransaction();
+            throw err;
         } finally {
             // Avoid ERROR: too many connections
             queryRunner.release();
@@ -27,7 +28,7 @@ export class ProductService {
         return this.dataSource.getRepository(Product).find();
     }
     // corresponding with DELETE HTTP method
-    async deleteProduct(id: number) {
+    async deleteProduct(id: number): Promise<DeleteResult> {
         return this.dataSource.getRepository(Product).delete(id);
     }
 }

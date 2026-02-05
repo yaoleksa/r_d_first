@@ -16,8 +16,8 @@ export class ProductController {
 
     @Post()
     @HttpCode(201)
-    async addNewProduct(@Body(new ZodValidationPipe(createProductSchema)) product: Product) {
-        return this.productService.addNewProduct(product);
+    async addNewProduct(@Body(new ZodValidationPipe(createProductSchema)) product: Product): Promise<Product> {
+        return await this.productService.addNewProduct(product);
     }
 
     @Delete(':id')

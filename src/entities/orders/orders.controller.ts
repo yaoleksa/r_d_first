@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Delete, Body, Query, Param } from "@nestjs/common";
+import { Controller, Get, Post, Param } from "@nestjs/common";
 import { OrdersService } from "./orders.service";
-import { Order, Product, User } from "../../../ecomerce";
+import { Product } from "../../../ecomerce";
 
 @Controller('/orders')
 export class OrdersController {
@@ -10,7 +10,7 @@ export class OrdersController {
         return await this.orderService.displayAllUserOrders(parseInt(userId));
     }
     @Post(':userId')
-    async createOrder(@Param() userId: number, products: Product[]) {
+    async createOrder(@Param('userId') userId: number, products: Product[]) {
         return await this.orderService.createOrder(userId, products);
     }
 }

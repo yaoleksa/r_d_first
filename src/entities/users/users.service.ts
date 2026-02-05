@@ -12,9 +12,10 @@ export class UsersService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const newUser = await queryRunner.manager.save(user);
+            const newUser = await queryRunner.manager.create(User, user);
+            const savedUser = await queryRunner.manager.save(newUser);
             await queryRunner.commitTransaction();
-            return newUser;
+            return savedUser;
         } catch(err) {
             await queryRunner.rollbackTransaction();
             throw err;

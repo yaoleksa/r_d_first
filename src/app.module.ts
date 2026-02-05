@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MeController } from './me.controller';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './entities';
+import { ProductModule, UsersModule } from './entities';
 import { User, Product, Order, OrderItem } from '../ecomerce';
 
 @Module({
@@ -14,6 +14,7 @@ import { User, Product, Order, OrderItem } from '../ecomerce';
       envFilePath: process.env.NODE_ENV ? `src/config/.env.${process.env.NODE_ENV}` : 'src/config/.env'
     }),
     UsersModule,
+    ProductModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'db.hmhzqphmgzyedifcbcrz.supabase.co',

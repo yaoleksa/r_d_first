@@ -1,6 +1,5 @@
 import { PipeTransform, ArgumentMetadata, BadRequestException } from "@nestjs/common";
 import { ZodType, z } from "zod";
-import { User } from "../../../ecomerce";
 
 class ZodValidationPipe<T> implements PipeTransform {
     constructor(private readonly schema: ZodType<T>) {}
@@ -24,12 +23,6 @@ const createProductSchema = z.object({
     title: z.string(),
     description: z.string(),
     price: z.number()
-});
-
-const createOrderSchema = z.object({
-    quantity: z.number().int().positive(),
-    products: z.array(createProductSchema).nonempty(),
-    userId: z.number().int().positive()
 });
 
 export { ZodValidationPipe, createUserSchema, createProductSchema };
