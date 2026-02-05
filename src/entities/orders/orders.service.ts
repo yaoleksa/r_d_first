@@ -4,60 +4,49 @@ import { DataSource, QueryRunner } from "typeorm";
 
 @Injectable()
 export class OrdersService {
-    private queryRunner: QueryRunner;
-    constructor(private dataSource: DataSource) {
-        this.queryRunner = this.dataSource.createQueryRunner();
-    }
-    async createOrder(newOrder: Order): Promise<string> {
-        await this.queryRunner.connect();
-        await this.queryRunner.startTransaction();
+    constructor(private dataSource: DataSource) {}
+    async createOrder(newOrder: Order): Promise<Order> {
+        // Calculate products related fields
+        newOrder.totalPrice = newOrder.products.reduce((ac, cv) => ac + cv.price, 0);
+        newOrder.quantity = newOrder.products.length;
+        // Individual QueryRunner for each transaction
+        const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
         try {
-            await this.queryRunner.manager.save(newOrder);
-            await this.queryRunner.commitTransaction();
-            return "Order has been successfully committed!"
-        } catch(err) {
-            await this.queryRunner.rollbackTransaction();
-            return err.message;
-        }
-    }
-    async displayAllOrders(): Promise<Order[] | string> {
-        await this.queryRunner.connect();
-        await this.queryRunner.startTransaction();
-        try {
-            const ordersList = await this.queryRunner.manager.find(Order);
-            await this.queryRunner.commitTransaction();
+            const ordersList = await queryRunner.manager.save(newOrder);
+            await queryRunner.commitTransaction();
             return ordersList;
         } catch(err) {
-            await this.queryRunner.rollbackTransaction();
-            return err.message;
+            await queryRunner.rollbackTransaction();
+            throw err;
+        } finally {
+            await queryRunner.release();
         }
     }
+    async displayAllOrders(): Promise<Order[]> {
+        return this.dataSource.getRepository(Order).find();
+    }
     async displayOne(id: number) {
-        await this.queryRunner.connect();
-        await this.queryRunner.startTransaction();
+        const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
         try {
-            const targetOrder = await this.queryRunner.manager.findOne(Order, {
+            const targetOrder = await queryRunner.manager.findOne(Order, {
                 where: {
                     id: id
                 }
             });
-            await this.queryRunner.commitTransaction();
+            await queryRunner.commitTransaction();
             return targetOrder;
         } catch(err) {
-            await this.queryRunner.rollbackTransaction();
-            return err.message;
+            await queryRunner.rollbackTransaction();
+            throw err;
+        } finally {
+            await queryRunner.release();
         }
     }
     async deleteOrder(id: number) {
-        await this.queryRunner.connect();
-        await this.queryRunner.startTransaction();
-        try {
-            await this.queryRunner.manager.delete(Order, id);
-            await this.queryRunner.commitTransaction();
-            return 'Order has been successfully removed!';
-        } catch(err) {
-            await this.queryRunner.rollbackTransaction();
-            return err.message;
-        }
+        return this.dataSource.getRepository(Order).delete(id);
     }
 }

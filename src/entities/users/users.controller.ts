@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, HttpCode, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, HttpCode, Param, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../../../ecomerce';
 import { ZodValidationPipe, createUserSchema } from '../pipes/Pipe';
@@ -11,23 +11,27 @@ export class UsersController {
 
     @Get()
     @HttpCode(200)
-    getUsers(): Promise<User[] | string> {
-        return this.usersService.findAll();
+    async getUsers(): Promise<User[]> {
+        return await this.usersService.findAll();
     }
 
-    @Get(':name')
+    @Get(':id')
     @HttpCode(200)
-    findUserByName(@Param('name') name: string): User | string {
-        return this.usersService.findByName(name);
+    async findUserById(@Param('id') id: number): Promise<User> {
+        const targetUser = await this.usersService.findOne(id);
+        if(!targetUser) {
+            throw new HttpException('There is no such user!', HttpStatus.NOT_FOUND);
+        }
+        return targetUser;
     }
 
     @Post()
     @HttpCode(201)
-    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<string | User> {
+    async createUser(@Body(new ZodValidationPipe(createUserSchema)) user: User): Promise<User> {
         try {
             return await this.usersService.create(user);
         } catch (err) {
-            return err.message;
+            throw err;
         }
     }
 

@@ -7,7 +7,7 @@ export class UsersService {
     
     constructor(private dataSource: DataSource) {}
 
-    async create(user: User): Promise<User | string> {
+    async create(user: User): Promise<User> {
         const queryRunner: QueryRunner = await this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -17,22 +17,21 @@ export class UsersService {
             return newUser;
         } catch(err) {
             await queryRunner.rollbackTransaction();
-            return err.message;
+            throw err;
         } finally {
             // Avoid ECONNREFUSED / too many connections ERROR
             await queryRunner.release();
         }
     }
-    findByName(name: string): User | string {
-        
-        return 'User with such name has not been found';
-    }
-    removeByName(name: string): string {
-        
-        return 'There is no user with such name';
+    async findOne(id: number): Promise<User> {
+        return await this.dataSource.getRepository(User).findOne({
+            where: {
+                id
+            }
+        });
     }
     async findAll(): Promise<User[]> {
-        return this.dataSource.getRepository(User).find()
+        return await this.dataSource.getRepository(User).find()
     }
     async deleteUser(id: number): Promise<DeleteResult> {
         return this.dataSource.getRepository(User).delete(id);

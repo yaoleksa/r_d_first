@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { Order } from "./Order"
 
 @Entity()
 export class User {
@@ -19,5 +20,8 @@ export class User {
         unique: true
     })
     email: string
-
+    
+    @OneToMany(type => Order, order => order.user, { cascade: true })
+    orders: Order[]
+    
 }

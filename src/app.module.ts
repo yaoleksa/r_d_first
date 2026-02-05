@@ -14,7 +14,6 @@ import { User, Product, Order, OrderItem } from '../ecomerce';
       envFilePath: process.env.NODE_ENV ? `src/config/.env.${process.env.NODE_ENV}` : 'src/config/.env'
     }),
     UsersModule,
-    ProductModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'db.hmhzqphmgzyedifcbcrz.supabase.co',
