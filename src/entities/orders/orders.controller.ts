@@ -5,12 +5,12 @@ import { Order, Product, User } from "../../../ecomerce";
 @Controller('/orders')
 export class OrdersController {
     constructor(private orderService: OrdersService) {}
-    @Get()
-    async showAllOrders(): Promise<Order[]> {
-        return await this.orderService.displayAllOrders();
+    @Get(':userId')
+    async showAllUsersOrders(@Param('userId') userId: any): Promise<any> {
+        return await this.orderService.displayAllUserOrders(parseInt(userId));
     }
-    @Post()
-    async createOrder(@Body() order: Order) {
-        return await this.orderService.createOrder(order);
+    @Post(':userId')
+    async createOrder(@Param() userId: number, products: Product[]) {
+        return await this.orderService.createOrder(userId, products);
     }
 }

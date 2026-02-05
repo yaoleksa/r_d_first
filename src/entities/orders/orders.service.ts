@@ -1,22 +1,28 @@
 import { Injectable } from "@nestjs/common";
-import { Order } from "../../../ecomerce";
+import { Order, Product, User } from "../../../ecomerce";
 import { DataSource, QueryRunner } from "typeorm";
 
 @Injectable()
 export class OrdersService {
     constructor(private dataSource: DataSource) {}
-    async createOrder(newOrder: Order): Promise<Order> {
-        // Calculate products related fields
-        newOrder.totalPrice = newOrder.products.reduce((ac, cv) => ac + cv.price, 0);
-        newOrder.quantity = newOrder.products.length;
+    async createOrder(userId: number, products: Product[]): Promise<Order> {
+        // Calculate products related fields 
+        const totalPrice = products.reduce((ac, cv) => ac + cv.price, 0);
+        const quantity = products.length;
         // Individual QueryRunner for each transaction
         const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const ordersList = await queryRunner.manager.save(newOrder);
+            // Create a new order
+            const newOrder = new Order(quantity, totalPrice, products, await this.dataSource.getRepository(User).findOne({
+                where: {
+                    id: userId
+                }
+            }));
+            const newOrderRecord = await queryRunner.manager.save(newOrder);
             await queryRunner.commitTransaction();
-            return ordersList;
+            return newOrderRecord;
         } catch(err) {
             await queryRunner.rollbackTransaction();
             throw err;
@@ -24,8 +30,24 @@ export class OrdersService {
             await queryRunner.release();
         }
     }
-    async displayAllOrders(): Promise<Order[]> {
-        return this.dataSource.getRepository(Order).find();
+    async displayAllUserOrders(userId: number): Promise<Order[]> {
+        const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            return await queryRunner.manager.findBy(Order, {
+                user: await this.dataSource.getRepository(User).findOne({
+                    where: {
+                        id: userId
+                    }
+                })
+            })
+        } catch(err) {
+            throw err;
+        } finally {
+            // Avoid memory leak
+            await queryRunner.release();
+        } 
     }
     async displayOne(id: number) {
         const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
