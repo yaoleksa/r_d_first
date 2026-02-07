@@ -20,9 +20,11 @@ export class OrdersService {
                     id: userId
                 }
             }));
-            const newOrderRecord = await queryRunner.manager.save(newOrder);
+            const newOrderRecord = await this.dataSource.getRepository(Order).create(newOrder);
+            console.log(newOrderRecord);
+            const savedOrderRecord = await queryRunner.manager.save(newOrderRecord);
             await queryRunner.commitTransaction();
-            return newOrderRecord;
+            return savedOrderRecord;
         } catch(err) {
             await queryRunner.rollbackTransaction();
             throw err;

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param } from "@nestjs/common";
+import { Controller, Get, Post, Param, Body } from "@nestjs/common";
 import { OrdersService } from "./orders.service";
 import { Product } from "../../../ecomerce";
 
@@ -10,7 +10,8 @@ export class OrdersController {
         return await this.orderService.displayAllUserOrders(parseInt(userId));
     }
     @Post(':userId')
-    async createOrder(@Param('userId') userId: number, products: Product[]) {
+    async createOrder(@Param('userId') userId: number, @Body() products: Product[]) {
+        console.log(products);
         return await this.orderService.createOrder(userId, products);
     }
 }
