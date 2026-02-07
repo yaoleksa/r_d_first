@@ -10,8 +10,7 @@ export class OrdersController {
         return await this.orderService.displayAllUserOrders(parseInt(userId));
     }
     @Post(':userId')
-    async createOrder(@Param('userId') userId: number, @Body() products: Product[]) {
-        console.log(products);
+    async createOrder(@Param('userId') userId: number, @Body() products: number[]) {
         return await this.orderService.createOrder(userId, products);
     }
 }

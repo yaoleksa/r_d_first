@@ -1,5 +1,4 @@
 import { Resolver, Query, Args, Int } from "@nestjs/graphql";
-import { OrderModel } from "./models/OrderModel";
 import { OrdersService } from "./entities/orders/orders.service";
 import { Order } from "../ecomerce";
 
