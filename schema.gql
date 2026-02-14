@@ -1,0 +1,50 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ProductModel {
+  id: Int!
+  title: String!
+  description: String!
+  price: Float!
+}
+
+type UserModel {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  age: Int!
+  email: String!
+  orders: [OrderModel!]!
+}
+
+type OrderItemModel {
+  id: Int!
+  product: ProductModel!
+  owner: UserModel!
+  order: OrderModel!
+  quantity: Int!
+}
+
+type OrderModel {
+  id: Int!
+  quantity: Int!
+  totalPrice: Float!
+  orderItems: [OrderItemModel!]!
+  user: UserModel!
+}
+
+type Query {
+  smokeQuery: String!
+  order(id: Int!): OrderModel!
+  orders(filter: OrdersFilterInput, pagination: OrdersPaginationInput): [OrderModel!]!
+}
+
+input OrdersFilterInput {
+  userId: Int
+}
+
+input OrdersPaginationInput {
+  limit: Int
+  offset: Int
+}
