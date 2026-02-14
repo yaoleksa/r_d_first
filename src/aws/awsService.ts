@@ -7,7 +7,7 @@ import { ConfigService } from "@nestjs/config";
 export class FileRecordService {
     private s3service: S3Service;
     constructor(private configService: ConfigService) {
-        // this.s3service = new S3Service(configService);
+        this.s3service = new S3Service(configService);
     }
     async uploadFile() {
         this.s3service;

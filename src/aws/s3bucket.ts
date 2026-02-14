@@ -6,14 +6,16 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 export class S3Service {
     private readonly s3client: S3Client;
     private readonly bucketName: string;
-    constructor(private configService: ConfigService) {
-        console.log(this.configService);
+    constructor(configService: ConfigService) {
         this.s3client = new S3Client({
-            region: this.configService.get('AWS_REGION'),
+            region: configService.get('AWS_REGION'),
             credentials: {
-                accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
+                accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
                 secretAccessKey: 'AWS_SECRET_ACCESS_KEY'
             }
         });
+        this.bucketName = configService.get('AWS_BUCKET_NAME');
     }
+
+    async generatePresignedUrl() {}
 }
