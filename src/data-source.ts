@@ -20,5 +20,5 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     entities: [Order, OrderItem, Product, User],
     migrations: ["src/migrations/*.ts"],
-    synchronize: false
+    synchronize: true
 });

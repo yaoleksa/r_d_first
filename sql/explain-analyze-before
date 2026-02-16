@@ -1,0 +1,8 @@
+"QUERY PLAN"
+"Sort  (cost=34.03..34.94 rows=364 width=72) (actual time=0.234..0.255 rows=366 loops=1)"
+"  Sort Key: ""createdAt"" DESC"
+"  Sort Method: quicksort  Memory: 59kB"
+"  ->  Seq Scan on ""order""  (cost=0.00..18.55 rows=364 width=72) (actual time=0.013..0.129 rows=366 loops=1)"
+"        Filter: (""userId"" = 7)"
+"Planning Time: 0.095 ms"
+"Execution Time: 0.290 ms"

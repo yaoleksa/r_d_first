@@ -4,7 +4,7 @@ export class AddOrdersHotIndex1771232533785 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-            CREATE INDEX idx_orders_user_created_at_desc
+            CREATE INDEX "idx_orders_user_created_at_desc"
             ON "order" ("userId", "createdAt" DESC);
             `);
     }

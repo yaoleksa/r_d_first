@@ -27,7 +27,7 @@ import { FileRecordModule } from './aws/awsModule';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [User, Product, Order, OrderItem],
-      synchronize: true
+      synchronize: false
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
