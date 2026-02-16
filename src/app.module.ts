@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductModule, UsersModule } from './entities';
 import { User, Product, Order, OrderItem } from '../ecomerce';
 import { OrderResolver } from './app.resolver';
-import { FileRecordModule } from './aws/awsModule';
+import { FileRecordModule } from './file-record-entity';
 
 @Module({
   imports: [
