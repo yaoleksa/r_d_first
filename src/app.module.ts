@@ -9,6 +9,7 @@ import { MeController } from './me.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule, UsersModule } from './entities';
 import { User, Product, Order, OrderItem } from '../ecomerce';
+import { FileRecord } from '../file-storage/FileRecord';
 import { OrderResolver } from './app.resolver';
 import { FileRecordModule } from './file-record-entity';
 
@@ -26,8 +27,8 @@ import { FileRecordModule } from './file-record-entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Product, Order, OrderItem],
-      synchronize: false
+      entities: [User, Product, Order, OrderItem, FileRecord],
+      synchronize: true
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

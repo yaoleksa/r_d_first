@@ -21,7 +21,7 @@ export class FileRecord {
     @Column()
     key: string;
     @Column()
-    contemtType: string;
+    contentType: string;
     @Column()
     size: number;
     @Column({ type: 'enum', enum: Status, default: Status.PENDING })
