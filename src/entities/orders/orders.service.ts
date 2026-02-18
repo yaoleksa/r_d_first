@@ -1,7 +1,7 @@
-import { Injectable, InternalServerErrorException, HttpException, HttpStatus, HttpCode } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, HttpException, HttpStatus } from "@nestjs/common";
 import { Order, OrderItem, Product, User } from "../../../ecomerce";
-import { DataSource, QueryRunner, In } from "typeorm";
-import { OrdersPaginationInput } from "../../models";
+import { DataSource, QueryRunner, In, Between } from "typeorm";
+import { OrdersFilterInput, OrdersPaginationInput } from "../../models";
 
 @Injectable()
 export class OrdersService {
@@ -109,7 +109,7 @@ export class OrdersService {
         }
     }
     
-    async displayAllUserOrders(userId: number, pagination?: OrdersPaginationInput): Promise<Order[]> {
+    async displayAllUserOrders(filter: OrdersFilterInput, pagination?: OrdersPaginationInput): Promise<Order[]> {
         const queryRunner: QueryRunner = await this.dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -117,8 +117,10 @@ export class OrdersService {
             const ordersList = await queryRunner.manager.find(Order, {
                 where: {
                     user: {
-                        id: userId
-                    }
+                        id: filter.userId
+                    },
+                    status: filter.status,
+                    createdAt: Between(new Date(filter.dateFrom), new Date(filter.dateTo))
                 },
                 relations: {
                     orderItems: {

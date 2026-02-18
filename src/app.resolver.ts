@@ -20,6 +20,6 @@ export class OrderResolver {
         @Args('filter', { nullable: true }) filter: OrdersFilterInput, 
         @Args('pagination', { nullable: true }) pagination: OrdersPaginationInput
     ) {
-        return this.orderService.displayAllUserOrders(filter?.userId, pagination);
+        return this.orderService.displayAllUserOrders(filter, pagination);
     }
 }
