@@ -3,7 +3,7 @@ import { OrderStatus } from "../../ecomerce";
 
 @InputType()
 export class OrdersFilterInput {
-    @Field(() => Int, { nullable: false })
+    @Field(() => Int, { nullable: true })
     userId?: number;
     @Field(() => String, { nullable: true })
     status: OrderStatus;

@@ -24,6 +24,7 @@ type OrderItemModel {
   owner: UserModel!
   order: OrderModel!
   quantity: Int!
+  productId: Int!
 }
 
 type OrderModel {
@@ -32,6 +33,7 @@ type OrderModel {
   totalPrice: Float!
   orderItems: [OrderItemModel!]!
   user: UserModel!
+  product: ProductModel!
 }
 
 type Query {
@@ -41,7 +43,7 @@ type Query {
 }
 
 input OrdersFilterInput {
-  userId: Int!
+  userId: Int
   status: String
   dateFrom: DateTime
   dateTo: DateTime

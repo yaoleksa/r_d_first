@@ -15,4 +15,6 @@ export class OrderItemModel {
     order: OrderModel;
     @Field(type => Int)
     quantity: number;
+    @Field(type => Int)
+    productId: number
 }

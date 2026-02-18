@@ -117,10 +117,10 @@ export class OrdersService {
             const ordersList = await queryRunner.manager.find(Order, {
                 where: {
                     user: {
-                        id: filter.userId
+                        id: filter?.userId
                     },
-                    status: filter.status,
-                    createdAt: Between(new Date(filter.dateFrom), new Date(filter.dateTo))
+                    status: filter?.status,
+                    createdAt: filter && filter.dateFrom && filter.dateTo ? Between(new Date(filter?.dateFrom), new Date(filter?.dateTo)) : undefined
                 },
                 relations: {
                     orderItems: {

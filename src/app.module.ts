@@ -12,6 +12,7 @@ import { User, Product, Order, OrderItem } from '../ecomerce';
 import { FileRecord } from '../file-storage/FileRecord';
 import { OrderResolver } from './app.resolver';
 import { FileRecordModule } from './file-record-entity';
+import { ProductDataLoader } from './entities/products/product.loader';
 
 @Module({
   imports: [
@@ -37,7 +38,7 @@ import { FileRecordModule } from './file-record-entity';
     FileRecordModule
   ],
   controllers: [AppController, MeController],
-  providers: [AppService, OrderResolver],
+  providers: [AppService, OrderResolver, ProductDataLoader],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {}
