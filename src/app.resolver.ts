@@ -1,13 +1,13 @@
 import { Resolver, Query, Args, Int, ResolveField, Parent } from "@nestjs/graphql";
 import { OrdersService } from "./entities/orders/orders.service";
-import { OrderModel, ProductModel } from "./models";
+import { OrderModel, OrderItemModel, ProductModel } from "./models";
 import { OrdersFilterInput } from "./models/OrdersFilterInput";
 import { OrdersPaginationInput } from "./models/OrdersPaginationInput";
 import { ProductDataLoader } from "./entities/products/product.loader";
 
 @Resolver(() => OrderModel)
 export class OrderResolver {
-    constructor(private orderService: OrdersService, private productDataLoader: ProductDataLoader) {}
+    constructor(private orderService: OrdersService) {}
     @Query(() => String)
     async smokeQuery(): Promise<String> {
         return "Playground is healthy ;)";
@@ -23,9 +23,14 @@ export class OrderResolver {
     ) {
         return this.orderService.displayAllUserOrders(filter, pagination);
     }
+}
+
+@Resolver(() => OrderItemModel)
+export class OrderItemResolver {
+    constructor(private readonly productDataLoader: ProductDataLoader) {}
 
     @ResolveField(() => ProductModel)
-    product(@Parent() order: OrderModel): Promise<(ProductModel | Error)[]> {
-        return this.productDataLoader.batchProducts.loadMany(order.orderItems.map(item => item.productId));
-    }
+        product(@Parent() orderItem: OrderItemModel): Promise<(ProductModel | Error)> {
+            return this.productDataLoader.batchProducts.load(orderItem.product.id)
+        }
 }

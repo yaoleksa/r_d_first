@@ -7,4 +7,6 @@ export class OrderItemModel {
     quantity: number;
     @Field(() => ProductModel)
     product: ProductModel;
+    @Field(() => Int)
+    productId: number;
 }

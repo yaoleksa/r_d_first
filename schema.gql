@@ -33,7 +33,6 @@ type OrderModel {
   totalPrice: Float!
   orderItems: [OrderItemModel!]!
   user: UserModel!
-  product: ProductModel!
 }
 
 type Query {

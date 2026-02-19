@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductModule, UsersModule } from './entities';
 import { User, Product, Order, OrderItem } from '../ecomerce';
 import { FileRecord } from '../file-storage/FileRecord';
-import { OrderResolver } from './app.resolver';
+import { OrderItemResolver, OrderResolver } from './app.resolver';
 import { FileRecordModule } from './file-record-entity';
 import { ProductDataLoader } from './entities/products/product.loader';
 
@@ -38,7 +38,7 @@ import { ProductDataLoader } from './entities/products/product.loader';
     FileRecordModule
   ],
   controllers: [AppController, MeController],
-  providers: [AppService, OrderResolver, ProductDataLoader],
+  providers: [AppService, OrderResolver, ProductDataLoader, OrderItemResolver],
 })
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {}
