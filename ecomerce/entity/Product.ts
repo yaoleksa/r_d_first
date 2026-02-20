@@ -12,4 +12,6 @@ export class Product {
     price: number;
     @Column({ type: 'int' })
     stock!: number;
+    @Column('text', { array: true, default: [] })
+    images: string[];
 }
