@@ -9,7 +9,7 @@ export class AppService {
           /user
           /products
           /orders/:userId
-          /files [GET] /presign [POST] /files/auth/login [POST]
+          /files [GET] /presign [POST] /files/auth/login [POST] /files/complete [POST]
     </pre>
     `;
   }
