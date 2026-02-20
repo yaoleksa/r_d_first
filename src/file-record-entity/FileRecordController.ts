@@ -23,6 +23,6 @@ export class FileRecordController {
     @UseGuards(JwtGuard)
     @Post('presign')
     async initUpload(@Req() request, @Body() dto: InitUploadDTO) {
-        return this.fileRecordService.initUpload(request.user.id, dto);
+        return this.fileRecordService.initUpload(request.user.sub, dto);
     }
 }
