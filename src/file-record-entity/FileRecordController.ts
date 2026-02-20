@@ -1,18 +1,28 @@
-import { Controller, Post, Body, Headers, Get } from "@nestjs/common";
+import {
+    Controller, 
+    Post, 
+    Body, 
+    Get, 
+    UseGuards,
+    Req
+} from "@nestjs/common";
 import { FileRecordService } from "./FileRecordService";
 import { InitUploadDTO } from "./dto";
+import { FileRecord } from "../../file-storage/FileRecord";
+import { JwtGuard } from "./guards/JwtGuard";
 
 @Controller('files')
 export class FileRecordController {
     constructor(private fileRecordService: FileRecordService) {}
     // To inform client about service logic
     @Get()
-    async getExplanation(): Promise<string> {
-        return 'There is available only POST HTTP request with /presign endpiont to get file presign upload URL';
+    async getExplanation(): Promise<FileRecord[]> {
+        return this.fileRecordService.getFilesMetadata();
     }
     // Returns presign URL
+    @UseGuards(JwtGuard)
     @Post('presign')
-    async initUpload(@Headers('authorization') authorization: string, @Body() dto: InitUploadDTO) {
-        return this.fileRecordService.initUpload(dto);
+    async initUpload(@Req() request, @Body() dto: InitUploadDTO) {
+        return this.fileRecordService.initUpload(request.user.id, dto);
     }
 }

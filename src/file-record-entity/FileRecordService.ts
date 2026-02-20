@@ -9,7 +9,11 @@ export class FileRecordService {
 
     constructor(private s3service: S3Service, private dataSource: DataSource) {}
 
-    async initUpload(initUploadDTO: InitUploadDTO) {
+    async getFilesMetadata(): Promise<FileRecord[]> {
+        return this.dataSource.getRepository(FileRecord).find();
+    }
+
+    async initUpload(userId: string, initUploadDTO: InitUploadDTO) {
         const fileRecordRepository = this.dataSource.getRepository(FileRecord);
         const s3response = await this.s3service.generatePresignedUrl(
             initUploadDTO.fileName,
@@ -17,7 +21,7 @@ export class FileRecordService {
             initUploadDTO.size
         );
         const file = await fileRecordRepository.save({
-            ownerId: initUploadDTO.ownerId,
+            ownerId: userId,
             entityId: initUploadDTO.entityId,
             key: s3response.key,
             contentType: initUploadDTO.contentType,
@@ -25,7 +29,9 @@ export class FileRecordService {
         });
         return {
             fileId: file.id,
-            url: s3response.uploadUrl
+            key: s3response.key,
+            url: s3response.uploadUrl,
+            contentType: initUploadDTO.contentType
         }
     }
 }

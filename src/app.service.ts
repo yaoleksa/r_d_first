@@ -5,11 +5,11 @@ export class AppService {
   getHello(): string {
     return `
     <pre>
-        This is our internet shop. There are next pages:
+        This is our internet shop. There are next endpoints:
           /user
           /products
           /orders/:userId
-          /files    [Only the POST HTTP request available]
+          /files [GET] /presign [POST] /files/auth/login [POST]
     </pre>
     `;
   }

@@ -15,7 +15,7 @@ export class FileRecord {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()
-    ownerId: number;
+    ownerId: string;
     @Column()
     entityId: number;
     @Column()

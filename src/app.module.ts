@@ -13,11 +13,13 @@ import { FileRecord } from '../file-storage/FileRecord';
 import { OrderItemResolver, OrderResolver } from './app.resolver';
 import { FileRecordModule } from './file-record-entity';
 import { ProductDataLoader } from './entities/products/product.loader';
+import { AuthModule } from './file-record-entity/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: process.env.NODE_ENV ? `src/config/.env.${process.env.NODE_ENV}` : 'src/config/.env'
+      envFilePath: process.env.NODE_ENV ? `src/config/.env.${process.env.NODE_ENV}` : 'src/config/.env',
+      isGlobal: true
     }),
     UsersModule,
     ProductModule,
