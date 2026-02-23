@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # Define global node version variable
 ARG NODE_VERSION=22.19.0
-FROM ${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-alpine
 # Define working directory
 WORKDIR /usr/app
 # Install all dependecies including dev
