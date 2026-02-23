@@ -1,0 +1,37 @@
+services:
+# ============================================
+# Database service
+# ============================================
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+# ============================================
+# Migration
+# ============================================
+  migration:
+    build:
+      context: .
+      target: migration
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: "no"
+# ============================================
+# Prod distroless
+# ============================================
+  app:
+    build:
+      context: .
+      target: prod-distroless
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - migration

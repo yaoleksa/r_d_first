@@ -1,0 +1,49 @@
+#### This is a smoke query to check if graphql was implemented
+query {
+  smokeQuery
+}
+
+#### This is a basic Order query
+query {
+  order(id: 5) {
+    id
+    user {
+      id
+      firstName
+      lastName
+    },
+    orderItems {
+      product {
+        title
+        price
+      }
+      quantity
+    }
+  }
+}
+
+#### Sample query with filter
+query {
+  orders(filter: { userId: 9 }) {
+    id
+    totalPrice
+    quantity
+    user {
+      lastName
+      firstName
+    }
+  }
+}
+
+#### Query with filter and limit as well
+query {
+  orders(filter: { userId: 9 }, pagination: { limit: 0, offset: 0}) {
+    id
+    totalPrice
+    quantity
+    user {
+      lastName
+      firstName
+    }
+  }
+}

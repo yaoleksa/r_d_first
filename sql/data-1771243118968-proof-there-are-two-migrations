@@ -1,0 +1,5 @@
+"indexname","indexdef"
+"PK_1031171c13130102495201e3e20","CREATE UNIQUE INDEX ""PK_1031171c13130102495201e3e20"" ON public.""order"" USING btree (id)"
+"IDX_a04f470c2ea13cd25669bbc345","CREATE UNIQUE INDEX ""IDX_a04f470c2ea13cd25669bbc345"" ON public.""order"" USING btree (""userId"", ""idempotencyKey"")"
+"idx_order_user_createdAt","CREATE INDEX ""idx_order_user_createdAt"" ON public.""order"" USING btree (""userId"", ""createdAt"")"
+"idx_orders_user_created_at_desc","CREATE INDEX idx_orders_user_created_at_desc ON public.""order"" USING btree (""userId"", ""createdAt"" DESC)"

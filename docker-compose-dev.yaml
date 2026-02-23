@@ -1,0 +1,41 @@
+# version: "3.9"
+# ==============================================================================================
+# Compose file to up application in dev mode with hot reload, bind-mount and quick iteration
+# ==============================================================================================
+# Database Service
+# ==============================================================================================
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+# =============================================================================================
+# Dev mode
+# =============================================================================================
+  app:
+    image: node:22-alpine
+    working_dir: /usr/app
+    command: npm run start:dev
+    volumes:
+      - .:/usr/app  # bind-mount
+      - /usr/app/node_modules  # to make node_modules stable
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: development
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DB_NAME: postgres
+    depends_on:
+      - db
+    
+volumes:
+  db-data: {}

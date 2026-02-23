@@ -1,0 +1,5 @@
+"QUERY PLAN"
+"Index Scan Backward using ""idx_order_user_createdAt"" on ""order""  (cost=0.27..25.71 rows=364 width=72) (actual time=0.026..0.152 rows=366 loops=1)"
+"  Index Cond: (""userId"" = 7)"
+"Planning Time: 0.036 ms"
+"Execution Time: 0.175 ms"
