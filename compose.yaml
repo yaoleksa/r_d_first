@@ -18,6 +18,7 @@ services:
   migration:
     build:
       context: .
+      dockerfile: ./Dockerfile
       target: migration
     env_file:
       - .docker.env
@@ -30,6 +31,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: ./Dockerfile
       target: production
     env_file:
       - .docker.env
@@ -43,6 +45,7 @@ services:
   app-distroless:
     build:
       context: .
+      dockerfile: ./Dockerfile
       target: prod-distroless
     env_file:
       - .docker.env

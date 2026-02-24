@@ -72,7 +72,7 @@
  # Docker
  Для того щоб використовувати Docker треба спочатку створити образи. Для цього в директорії є два `compose` файли. Отже, почнемо із побудови образу для `dev` середовища.
  Для створення цбого образу потрібно запустити команду `docker-compose -f docker-compose-dev.yaml up --build`. Ця команда також і запускає контейнер на основі зібрангого образу. Хочу звернути увагу, що при запуску `dev` образу база даних буде порожньою, тобто не створено жодної з можливих для проекту сутностей.
- Для побудови multi-stage образу потрібно запустити команду `docker-compose -p r_d_first_prod up --build`. Для запуску конкретного `stage` потрібно запустити наступну команду `docker run -p 8080:8080 --name r_d_first_production_service --env-file .docker.env r_d_first-app:latest`
+ Для побудови multi-stage образу потрібно запустити команду `docker compose -p r_d_first up --build`. Контейнер запуститься автоматично
 
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.

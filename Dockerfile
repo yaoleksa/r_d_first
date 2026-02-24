@@ -89,9 +89,10 @@ ENV NODE_ENV=production
 USER nonroot
 
 # Copy only what is needed for runtime
-COPY --from=deps /usr/app/node_modules ./node_modules
-COPY --from=deps /usr/app/package*.json ./
-COPY --from=build /usr/app/build ./build
+COPY --from=deps --chown=nonroot:nonroot /usr/app/node_modules ./node_modules
+COPY --from=deps --chown=nonroot:nonroot /usr/app/package*.json ./
+COPY --from=build --chown=nonroot:nonroot /usr/app/build ./build
+COPY --from=build --chown=nonroot:nonroot /usr/app/schema.gql ./schema.gql
 
 EXPOSE 8080
 
