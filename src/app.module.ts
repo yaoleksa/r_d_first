@@ -13,7 +13,7 @@ import { FileRecord } from '../file-storage/FileRecord';
 import { OrderItemResolver, OrderResolver } from './app.resolver';
 import { FileRecordModule } from './file-record-entity';
 import { ProductDataLoader } from './entities/products/product.loader';
-import { AuthModule } from './file-record-entity/auth/auth.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -37,7 +37,15 @@ import { AuthModule } from './file-record-entity/auth/auth.module';
       driver: ApolloDriver,
       autoSchemaFile: `${process.cwd()}/schema.gql`
     }),
-    FileRecordModule
+    FileRecordModule,
+    ClientsModule.register([{
+      name: 'MSG_ORDERS_SERVICE',
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://localhost:5672'],
+        queue: 'ORDERS_QUEUE'
+      }
+    }])
   ],
   controllers: [AppController, MeController],
   providers: [AppService, OrderResolver, ProductDataLoader, OrderItemResolver],

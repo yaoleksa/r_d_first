@@ -1,8 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
+  // RabbitMQ microservice
+  const transporter = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5672'],
+      queue: 'orders_queue'
+    }
+  });
+  // Start RabbitMQ microservice
+  transporter.listen();
+  // NestJS application
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT ?? 3000;
   const host = process.env.HOST ?? 'localhost';
