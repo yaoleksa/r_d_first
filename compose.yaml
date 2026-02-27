@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
 # ============================================
 # Migration
 # ============================================
@@ -22,6 +24,8 @@ services:
       - .docker.env
     depends_on:
       - db
+    networks:
+      - backend
     restart: "no"
 # ============================================
 # Prodaction service
@@ -37,6 +41,9 @@ services:
       - "8080:8080"
     depends_on:
       - migration
+    networks:
+      - backend
+      - public
 # ============================================
 # Prod distroless
 # ============================================
@@ -51,6 +58,21 @@ services:
       - "8081:8080"
     depends_on:
       - migration
+    networks:
+      - backend
+      - public
+# ============================================
+# Create empty volumes
+# ============================================
 volumes:
   db-data: {}
   node_modules: {}
+# ============================================
+# Configure networks
+# ============================================
+networks:
+  backend:
+    driver: bridge
+    internal: true
+  public:
+    driver: bridge

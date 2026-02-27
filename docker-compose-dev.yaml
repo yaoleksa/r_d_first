@@ -13,6 +13,8 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
 # =============================================================================================
 # Dev mode
 # =============================================================================================
@@ -34,6 +36,8 @@ services:
       DB_NAME: postgres
     depends_on:
       - db
+    networks:
+      - backend
     # To run dev stage via docker-compose
     build:
       context: .
@@ -42,3 +46,9 @@ services:
 volumes:
   db-data: {}
   node_modules: {}
+# ============================================
+# Configure networks
+# ============================================
+networks:
+  backend:
+    driver: bridge

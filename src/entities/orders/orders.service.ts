@@ -13,6 +13,15 @@ export class OrdersService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
+            // Check if idempotency key is unique. Return existing order otherwise
+            const existingRecords = await queryRunner.manager.findOne(Order, {
+                where: {
+                    idempotencyKey
+                }
+            });
+            if(existingRecords) {
+                return existingRecords;
+            }
             // Implement logic here
             const order: Order = new Order();
             // Get order owner from database
@@ -84,22 +93,7 @@ export class OrdersService {
         } catch(err) {
             await queryRunner.rollbackTransaction();
             // Return existing record if idempotency key is not unique
-            if(err.code === '23505') {
-                return await this.dataSource.getRepository(Order).findOne({
-                    where: {
-                        idempotencyKey: idempotencyKey,
-                        user: {
-                            id: userId
-                        }
-                    },
-                    relations: {
-                        orderItems: {
-                            product: true
-                        },
-                        user: true
-                    }
-                });
-            } else if(err.status === 409) {
+            if(err.status === 409) {
                 throw new HttpException(err.message, HttpStatus.CONFLICT);
             }
             throw new InternalServerErrorException(err.message);
