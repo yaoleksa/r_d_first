@@ -42,6 +42,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+# ============================================
+# RabbitMQ service
+# ============================================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: r_d_first_rabbitmq_dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
   # Define db-data
 volumes:
   db-data: {}

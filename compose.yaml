@@ -62,6 +62,17 @@ services:
       - backend
       - public
 # ============================================
+# RabbitMQ service
+# ============================================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: r_d_first_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+# ============================================
 # Create empty volumes
 # ============================================
 volumes:
