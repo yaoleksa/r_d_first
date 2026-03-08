@@ -42,7 +42,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       name: 'MSG_ORDERS_SERVICE',
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://localhost:5672'],
+        urls: [process.env.RABBITMQ_URL],
         queue: 'ORDERS_QUEUE'
       }
     }])

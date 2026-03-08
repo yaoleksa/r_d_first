@@ -15,10 +15,11 @@ export class OrdersController {
     @Post(':userId')
     @UseInterceptors(IdempotencyInterceptor)
     async createOrder(
-        @Headers('idempotency-key') idempotencyKey: string, 
+        @Headers('idempotency-key') idempotencyKey: string,
+        @Headers('X-Correlation-ID') correlationId: string,
         @Param('userId') userId: number, 
         @Body() products: number[]
     ) {
-        return await this.orderService.createOrder(userId, products, idempotencyKey);
+        return await this.orderService.createOrder(userId, products, idempotencyKey, correlationId);
     }
 }

@@ -2,12 +2,14 @@ import { Injectable, InternalServerErrorException, HttpException, HttpStatus } f
 import { Order, OrderItem, Product, User } from "../../../ecomerce";
 import { DataSource, QueryRunner, In, Between } from "typeorm";
 import { OrdersFilterInput, OrdersPaginationInput } from "../../models";
+import { RabbitMQService } from "../../rabbitmq/rabbitmq.service";
+import { v4 } from "uuid";
 
 @Injectable()
 export class OrdersService {
-    constructor(private dataSource: DataSource) {}
+    constructor(private dataSource: DataSource, private readonly rabbitMQService: RabbitMQService) {}
 
-    async createOrder(userId: number, products: number[], idempotencyKey: string): Promise<Order> {
+    async createOrder(userId: number, products: number[], idempotencyKey: string, correlationId: string): Promise<Order> {
         // Individual QueryRunner for each transaction
         const queryRunner: QueryRunner = await this.dataSource.createQueryRunner();
         await queryRunner.connect();
@@ -89,6 +91,15 @@ export class OrdersService {
             await queryRunner.manager.save(Product, productsList);
             const newOrder = await queryRunner.manager.save(Order, order);
             await queryRunner.commitTransaction();
+            await this.rabbitMQService.publish('OrdersService.createOrder', {
+                messageId: v4(),
+                orderId: newOrder.id,
+                createdAt: newOrder.createdAt.toISOString(),
+                correlationId: correlationId,
+                producer: this.constructor.name,
+                eventName: 'CREATE_ORDER',
+                attempt: 0,
+            });
             return newOrder;
         } catch(err) {
             await queryRunner.rollbackTransaction();

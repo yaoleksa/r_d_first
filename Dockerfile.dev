@@ -6,6 +6,10 @@ FROM node:${NODE_VERSION}-alpine
 WORKDIR /usr/app
 # Install all dependecies including dev
 COPY ./package*.json ./
+
+# Copy environment variables
+COPY .docker.env ./
+
 RUN npm install
 # Copy source ..
 CMD ["npm", "run", "start:dev"]

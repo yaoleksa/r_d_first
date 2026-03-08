@@ -51,7 +51,7 @@ RUN npm run build
 # ================================
 # Production Stage
 # ================================
-FROM node:${NODE_VERSION}-alpine AS production
+FROM node:${NODE_VERSION}-alpine AS prod
 
 WORKDIR /usr/app
 

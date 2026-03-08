@@ -19,6 +19,7 @@ services:
 # Dev mode
 # =============================================================================================
   app:
+    target: dev
     working_dir: /usr/app
     volumes:
       - .:/usr/app  # bind-mount

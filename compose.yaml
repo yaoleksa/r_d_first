@@ -12,6 +12,23 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+# ============================================
+# RabbitMQ service
+# ============================================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
 # ============================================
 # Migration
 # ============================================
@@ -21,9 +38,10 @@ services:
       dockerfile: ./Dockerfile
       target: migration
     env_file:
-      - .docker.env
+      - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - backend
     restart: "no"
@@ -34,13 +52,14 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-      target: production
+      target: prod
     env_file:
-      - .docker.env
+      - .env
     ports:
       - "8080:8080"
     depends_on:
       - migration
+      - rabbitmq
     networks:
       - backend
       - public
@@ -53,25 +72,19 @@ services:
       dockerfile: ./Dockerfile
       target: prod-distroless
     env_file:
-      - .docker.env
+      - .env
     ports:
       - "8081:8080"
     depends_on:
-      - migration
+      db:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
     networks:
       - backend
       - public
-# ============================================
-# RabbitMQ service
-# ============================================
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: r_d_first_rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - backend
 # ============================================
 # Create empty volumes
 # ============================================
@@ -84,6 +97,6 @@ volumes:
 networks:
   backend:
     driver: bridge
-    internal: true
+    # internal: true
   public:
     driver: bridge
